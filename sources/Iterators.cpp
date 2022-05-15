@@ -7,12 +7,13 @@ using ariel::OrgChart;
 std::string s1 = "";
 ChartNode def(s1);
 
+// ---------------------------------------------------------------------------------------------------------
 // level order iterator
 bool OrgChart::level_order_iterator::operator!=(const level_order_iterator &other) const
 {
     return this->node != other.node;
 }
-void OrgChart::level_order_iterator::operator++()
+OrgChart::level_order_iterator &OrgChart::level_order_iterator::operator++()
 {
     this->node = this->node_queue.front();
     this->node_queue.pop();
@@ -24,19 +25,31 @@ void OrgChart::level_order_iterator::operator++()
             this->node_queue.push(child);
         }
     }
+
+    return *this;
 }
 ChartNode *OrgChart::level_order_iterator::operator->() const { return this->node; }
 ChartNode &OrgChart::level_order_iterator::operator*() const { return *this->node; }
+// ---------------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------------------------------
 // reverse level order iterator
-bool OrgChart::reverse_level_order_iterator::operator!=(const reverse_level_order_iterator &other) const { return false; }
-void OrgChart::reverse_level_order_iterator::operator++() {}
-ChartNode *OrgChart::reverse_level_order_iterator::operator->() const { return &def; }
-ChartNode &OrgChart::reverse_level_order_iterator::operator*() const { return def; }
+bool OrgChart::reverse_level_order_iterator::operator!=(const reverse_level_order_iterator &other) const { return this->node != other.node; }
+OrgChart::reverse_level_order_iterator &OrgChart::reverse_level_order_iterator::operator++()
+{
+    this->node = this->node_stack.top();
+    this->node_stack.pop();
 
+    return *this;
+}
+ChartNode *OrgChart::reverse_level_order_iterator::operator->() const { return this->node; }
+ChartNode &OrgChart::reverse_level_order_iterator::operator*() const { return *this->node; }
+// ---------------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------------
 // preorder iterator
 bool OrgChart::preorder_iterator::operator!=(const preorder_iterator &other) const { return this->node != other.node; }
-void OrgChart::preorder_iterator::operator++()
+OrgChart::preorder_iterator &OrgChart::preorder_iterator::operator++()
 {
     this->node = this->node_stack.top();
     this->node_stack.pop();
@@ -50,6 +63,9 @@ void OrgChart::preorder_iterator::operator++()
             this->node_stack.push(child);
         }
     }
+
+    return *this;
 }
 ChartNode *OrgChart::preorder_iterator::operator->() const { return this->node; }
 ChartNode &OrgChart::preorder_iterator::operator*() const { return *this->node; }
+// ---------------------------------------------------------------------------------------------------------

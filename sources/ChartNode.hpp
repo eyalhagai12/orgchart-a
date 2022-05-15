@@ -6,7 +6,7 @@
 namespace ariel
 {
     class ChartNode;
-    std::ostream &operator<<(std::ostream &out, ChartNode &node);
+    std::ostream &operator<<(std::ostream &out, const ChartNode &node);
 } // namespace ariel
 
 class ariel::ChartNode
@@ -18,10 +18,16 @@ private:
 public:
     // constructor destructor
     ChartNode(const std::string &data) : data(data) {}
-    ~ChartNode() {}
+    ~ChartNode()
+    {
+        for (ChartNode *child : this->children)
+        {
+            delete child;
+        }
+    }
 
     // friends
-    friend std::ostream &ariel::operator<<(std::ostream &out, ChartNode &node);
+    friend std::ostream &ariel::operator<<(std::ostream &out, const ChartNode &node);
 
     // methods
     size_t size();

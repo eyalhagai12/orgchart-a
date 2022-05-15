@@ -50,18 +50,47 @@ OrgChart &OrgChart::add_sub(const std::string &parent, const std::string &subord
     return *this;
 }
 
-OrgChart::level_order_iterator OrgChart::begin_level_order() { return OrgChart::level_order_iterator(*this); }
+OrgChart::level_order_iterator OrgChart::begin_level_order() const { return OrgChart::level_order_iterator(*this); }
 
-OrgChart::level_order_iterator OrgChart::end_level_order() { return OrgChart::level_order_iterator(OrgChart()); }
+OrgChart::level_order_iterator OrgChart::end_level_order() const { return OrgChart::level_order_iterator(OrgChart()); }
 
-OrgChart::reverse_level_order_iterator OrgChart::begin_reverse_order() { return OrgChart::reverse_level_order_iterator(*this); }
+OrgChart::reverse_level_order_iterator OrgChart::begin_reverse_order() const { return OrgChart::reverse_level_order_iterator(*this); }
 
-OrgChart::reverse_level_order_iterator OrgChart::end_reverse_order() { return OrgChart::reverse_level_order_iterator(OrgChart()); }
+OrgChart::reverse_level_order_iterator OrgChart::end_reverse_order() const { return OrgChart::reverse_level_order_iterator(OrgChart()); }
 
-OrgChart::preorder_iterator OrgChart::begin_preorder() { return OrgChart::preorder_iterator(*this); }
+OrgChart::preorder_iterator OrgChart::begin_preorder() const { return OrgChart::preorder_iterator(*this); }
 
-OrgChart::preorder_iterator OrgChart::end_preorder() { return OrgChart::preorder_iterator(OrgChart()); }
+OrgChart::preorder_iterator OrgChart::end_preorder() const { return OrgChart::preorder_iterator(OrgChart()); }
 
-std::ostream &ariel::operator<<(std::ostream &out, ChartNode &node) { return out; }
+std::ostream &ariel::operator<<(std::ostream &out, OrgChart &organization)
+{
+    std::queue<ChartNode *> node_queue;
+    node_queue.push(organization.root);
+    size_t level_size = organization.root->get_children().size();
 
-std::ostream &ariel::operator<<(std::ostream &out, OrgChart &organization) { return out; }
+    std::cout << *organization.root << std::endl;
+    size_t depth = 1;
+    while (node_queue.size() > 0)
+    {
+        ChartNode *node = node_queue.front();
+        node_queue.pop();
+
+        if (!node->get_children().empty())
+        {
+            for (ChartNode *child : node->get_children())
+            {
+                std::cout << *child << "      ";
+                node_queue.push(child);
+                level_size--;
+            }
+
+            if (level_size <= 0)
+            {
+                std::cout << std::endl;
+                level_size = node_queue.size();
+            }
+        }
+    }
+
+    return out;
+}
