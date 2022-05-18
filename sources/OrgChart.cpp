@@ -16,17 +16,21 @@ OrgChart &OrgChart::add_root(const std::string &root)
     return *this;
 }
 
+/*
+    search for a node recursively (might change to something else)
+*/
 ChartNode *OrgChart::get_node(ChartNode *root, const std::string &title)
 {
-    if (root->get_data() == title)
+    if (root->get_data() == title) // if found the return it
     {
         return root;
     }
-    else if (root->get_children().size() == 0)
+    else if (root->get_children().size() == 0) // if not and there is no where to go return null
     {
         return nullptr;
     }
 
+    // else work recursively  on the children
     for (ChartNode *node : root->get_children())
     {
         ChartNode *result = get_node(node, title);
@@ -54,6 +58,10 @@ OrgChart::level_order_iterator OrgChart::begin_level_order() const { return OrgC
 
 OrgChart::level_order_iterator OrgChart::end_level_order() const { return OrgChart::level_order_iterator(OrgChart()); }
 
+OrgChart::level_order_iterator OrgChart::begin() const { return end_level_order(); }
+
+OrgChart::level_order_iterator OrgChart::end() const { return end_level_order(); }
+
 OrgChart::reverse_level_order_iterator OrgChart::begin_reverse_order() const { return OrgChart::reverse_level_order_iterator(*this); }
 
 OrgChart::reverse_level_order_iterator OrgChart::end_reverse_order() const { return OrgChart::reverse_level_order_iterator(OrgChart()); }
@@ -62,6 +70,9 @@ OrgChart::preorder_iterator OrgChart::begin_preorder() const { return OrgChart::
 
 OrgChart::preorder_iterator OrgChart::end_preorder() const { return OrgChart::preorder_iterator(OrgChart()); }
 
+/*
+    print the tree in some way, not yet done as well as i wanted
+*/
 std::ostream &ariel::operator<<(std::ostream &out, OrgChart &organization)
 {
     std::queue<ChartNode *> node_queue;

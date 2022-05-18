@@ -15,24 +15,32 @@ namespace ariel
 class ariel::OrgChart
 {
 private:
+    // the root of the tree
     ChartNode *root;
+
+    std::vector<ChartNode *> default_iter;
+
+    // a simple private function to find a node in the tree
     ChartNode *get_node(ChartNode *root, const std::string &title);
 
 public:
     // constructor and destructor
-    OrgChart() : root(nullptr) {}
-    ~OrgChart() 
-    {
-        delete root;
-    }
+    OrgChart() : root(nullptr), default_iter(std::vector<ChartNode *>()) {}
+    ~OrgChart() { delete root; }
 
-    // iterators
+    // iterators (might change implementations)
+    // --------------------------------------------------------------------
     // --------------------------------------------------------------------
     class level_order_iterator
     {
     private:
+        // the container on which to terate
         const OrgChart &container;
+
+        // current node
         ChartNode *node;
+
+        // queue of nodes
         std::queue<ChartNode *> node_queue;
 
     public:
@@ -51,7 +59,7 @@ public:
         }
         ~level_order_iterator() {}
 
-        // operations
+        // operator overloads
         bool operator!=(const level_order_iterator &other) const;
         level_order_iterator &operator++();
         ChartNode *operator->() const;
@@ -59,11 +67,17 @@ public:
     };
 
     // --------------------------------------------------------------------
+    // --------------------------------------------------------------------
     class reverse_level_order_iterator
     {
     private:
+        // the container on which to terate
         const OrgChart &container;
+
+        // current node
         ChartNode *node;
+
+        // stack of nodes
         std::stack<ChartNode *> node_stack;
 
     public:
@@ -85,7 +99,7 @@ public:
         }
         ~reverse_level_order_iterator() {}
 
-        // operations
+        // operator overloads
         bool operator!=(const reverse_level_order_iterator &) const;
         reverse_level_order_iterator &operator++();
         ChartNode *operator->() const;
@@ -93,11 +107,17 @@ public:
     };
 
     // --------------------------------------------------------------------
+    // --------------------------------------------------------------------
     class preorder_iterator
     {
     private:
+        // the container on which to terate
         const OrgChart &container;
+
+        // current node
         ChartNode *node;
+
+        // stack of nodes
         std::stack<ChartNode *> node_stack;
 
     public:
@@ -119,7 +139,7 @@ public:
         }
         ~preorder_iterator() {}
 
-        // operations
+        // operator overloads
         bool operator!=(const preorder_iterator &other) const;
         preorder_iterator &operator++();
         ChartNode *operator->() const;
@@ -130,17 +150,20 @@ public:
     friend class reverse_level_order_iterator;
     friend class preorder_iterator;
     // --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
     // methods
-    ariel::OrgChart &add_root(const std::string &);                     // add a new root to the chart
+    ariel::OrgChart &add_root(const std::string &);                     // add a new root to the chart or change current one
     ariel::OrgChart &add_sub(const std::string &, const std::string &); // add a subordinate to someomne in the chart
-    level_order_iterator begin_level_order() const;                     // get the beginning an iterator for level order passage
-    level_order_iterator end_level_order() const;                       // get the ending of an iterator for level order passage
-    reverse_level_order_iterator begin_reverse_order() const;           // get the beginning an iterator for reverse level order passage
-    reverse_level_order_iterator end_reverse_order() const;             // get the ending an iterator for reverse level order passage
-    preorder_iterator begin_preorder() const;                           // get the beginning an iterator for preorder passage
-    preorder_iterator end_preorder() const;                             // get the ending an iterator for preorder passage
+    level_order_iterator begin_level_order() const;                     // get the beginning an iterator for level order traversal
+    level_order_iterator end_level_order() const;                       // get the ending of an iterator for level order traversal
+    level_order_iterator begin() const;                                 // a default iterator over the continaer
+    level_order_iterator end() const;                                   // a defualt end for the iterator over the container
+    reverse_level_order_iterator begin_reverse_order() const;           // get the beginning an iterator for reverse level order traversal
+    reverse_level_order_iterator end_reverse_order() const;             // get the ending an iterator for reverse level order traversal
+    preorder_iterator begin_preorder() const;                           // get the beginning an iterator for preorder traversal
+    preorder_iterator end_preorder() const;                             // get the ending an iterator for preorder traversal
 
-    // operators
+    // operator overloads
     friend std::ostream &ariel::operator<<(std::ostream &out, OrgChart &organization); // override << operator
 };
